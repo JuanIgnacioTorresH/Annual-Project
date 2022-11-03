@@ -71,6 +71,8 @@ int main() {
   /*salida al control del servo*/
   gpio_init (8);
   gpio_set_dir(8, true);
+
+  float voltage_value = obtain_data ();
   
 	/* Inicializo el LCD */
 	lcd_init(lcd);
@@ -93,12 +95,21 @@ int main() {
 		/* Limpio el LCD. Por defecto, va al 0;0 */
     lcd_clear(lcd);
 		/* Escribo en la pantalla */
-		lcd_puts(lcd, "Hello!");
-		/* Voy a la columna 6, fila 1 */
-		lcd_go_to_xy(lcd, 6, 1);
-		/* Imprime un mensaje en la pantalla */
-    lcd_puts(lcd, "From Pico!");
-    /* Espero medio segundo */
+		lcd_puts(lcd, "Heart Rate: %.2f",HR_value);
+    if ( PVC = xvalue) {
+      lcd_go_to_xy(lcd, 1, 2);
+      lcd_puts(lcd, "Premature Venticular Contraction");
+    }
+    else if ( VT = xvalue) {
+      lcd_go_to_xy(lcd, 1, 2);
+      lcd_puts(lcd, "Venticular Tachycardia");
+    } 
+    else if ( VF = xvalue) {
+      lcd_go_to_xy(lcd, 1, 2);
+
+      lcd_puts(lcd, "Venticular Fibrillation",HR_value);
+
+    }
     
     /*       Algoritmo para los datos de entrada      */
 

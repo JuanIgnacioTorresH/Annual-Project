@@ -19,7 +19,7 @@ static inline lcd_t lcd_get_default_config(void) {
   return lcd;
 }
 
-/* Obtiene la mascara de pines de datos */
+/* Obtiene la máscara de pines de datos */
 static inline uint32_t lcd_get_data_mask(lcd_t lcd) {
   return 1 << lcd.d4 | 1 << lcd.d5 | 1 << lcd.d6 | 1 << lcd.d7;
 }
@@ -38,6 +38,13 @@ void lcd_puts(lcd_t lcd, const char* str);
 void lcd_clear(lcd_t lcd);
 void lcd_go_to_xy(lcd_t lcd, uint8_t x,  uint8_t y);
 
+/*Algunas de las funciones puede que terminen yendo a main.c*/
+void infrared_init (uint8_t ,uint8_t)
+float obtain_data ();
+
+
+
+
 /* Programa principal */
 
 int main() {
@@ -55,8 +62,13 @@ int main() {
 		
 		Si quieren cambiar alguno pueden hacerlo como lcd.d5 = 6 por ejemplo */
 
+  /*Entrada de datos del infrarojo (tendría que ir en la función)*/
   gpio_init (6);
   gpio_set_dir(6, false);
+  /*Alimentación del buzzer y del servo */
+  gpio_init (7);
+  gpio_set_dir(7, true);
+  /*salida al control del servo*/
   gpio_init (8);
   gpio_set_dir(8, true);
   
@@ -64,6 +76,20 @@ int main() {
 	lcd_init(lcd);
 
   while (true) {
+    
+    /*        PWM y Alimentación
+    if (counter > xvalue){
+      gpio_put (7, true);
+      while (counter > xvalue){
+        gpio_put (8,true);
+        sleep_ms (seg dependiendo del servo);
+        gpio_put (8,false);
+      }
+      gpio_put (7, false);
+    }
+    */
+
+
 		/* Limpio el LCD. Por defecto, va al 0;0 */
     lcd_clear(lcd);
 		/* Escribo en la pantalla */
@@ -73,6 +99,9 @@ int main() {
 		/* Imprime un mensaje en la pantalla */
     lcd_puts(lcd, "From Pico!");
     /* Espero medio segundo */
+    
+    /*       Algoritmo para los datos de entrada      */
+
 		sleep_ms(500);
   }
 }
@@ -220,7 +249,19 @@ void lcd_go_to_xy(lcd_t lcd, uint8_t x, uint8_t y) {
 		aux = 0xC0 + x;;
 		/* Send first nibble */
 		lcd_put_command(lcd, aux >> 4);
-		/* Eend second nibble */
+		/* End second nibble */
 		lcd_put_command(lcd, aux & 0x0F);
 	}
+}
+
+void infrared_init (){
+  /*Puede ser infrared_init o directamente conectar el switch entre las
+  fuentes de alimentación del micro y del circuito infrarojo*/
+  gpio_init (6);
+  gpio_set_dir (6,false);
+}
+
+float obtain_data (){
+  /*Retrieve los datos del infrarojo, y el procesamiento iría en el main.c*/
+  return voltage_value;
 }

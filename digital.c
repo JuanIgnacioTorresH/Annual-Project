@@ -67,7 +67,7 @@ int main() {
   /*Entrada de datos del infrarojo (tendría que ir en la función)*/
   adc_init ();
   adc_gpio_init (6);
-  gpio_select_imput (0);
+  gpio_select_input (0);
 
   /*Alimentación del buzzer y del servo */
   gpio_init (7);

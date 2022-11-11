@@ -72,7 +72,7 @@ int main() {
   float low_peak = 0;
   float absolute_time_to = 0;
   float absolute_time_from = 0;
-	float time = 0;
+  float total_time = 0;
   float heart_rate = 0;
   float no_pulse = 0;
 
@@ -87,7 +87,7 @@ int main() {
       gpio_put (7, true);
       while (no_pulse >= 10 ){
         gpio_put (8,true);
-        sleep_ms ();
+        sleep_ms (20);
         gpio_put (8,false);
       }
       gpio_put (7, false);
@@ -105,10 +105,10 @@ int main() {
         high_peak = 1;
 
       }
-      if (high peak = 2){
+      if (high _peak = 2){
         absolute_time_to = get_absolute_time();
-        time = absolute_time_to - absolute_time_from;
-        time = time / 1000000;
+        total_time = absolute_time_to - absolute_time_from;
+        total_time = total_time / 1000000;
         high_peak = 0;
         no_pulse = 0 ;
       }

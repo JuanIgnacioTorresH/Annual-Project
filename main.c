@@ -46,8 +46,10 @@ void lcd_go_to_xy(lcd_t lcd, uint8_t x,  uint8_t y);
 int main() {
 	/* Inicializo el USB */
   stdio_init_all();
+  
+  sleep_ms(1000);
 	/* Obtengo una variable para elegir los pines del LCD */
-  lcd_t lcd = lcd_get_default_config();
+  //lcd_t lcd = lcd_get_default_config();
 	/* Por defecto, los pines son:
 	 	- GP0 (RS)
 		- GP1 (EN) 
@@ -59,7 +61,7 @@ int main() {
   /*Inicio de entrada de datos del infrarojo*/
   adc_init ();
   adc_gpio_init (28);
-  gpio_select_input (0);
+  adc_select_input (0);
 	
 	/*Inicio un gpio de para el LED de emergencia*/
 	gpio_init (7);
@@ -75,7 +77,7 @@ int main() {
   float no_pulse = 0;
 
 	/* Inicializo el LCD */
-	lcd_init(lcd);
+//	lcd_init(lcd);
 
   while (true) {
 	  /*Asigna una variable para los datos del adc*/
@@ -95,7 +97,7 @@ int main() {
         high_peak = 1;
 
       }
-      if (high _peak = 2){
+      if (high_peak = 2){
         absolute_time_to = get_absolute_time();
         total_time = absolute_time_to - absolute_time_from;
         total_time = total_time / 1000000;
@@ -109,7 +111,7 @@ int main() {
         no_pulse = no_pulse + 1;
       }
     }
-    heart_rate = 60 / time;
+    heart_rate = 60 / total_time;
     
 	  /*LED de Emergencia*/
 	  if (no_pulse = 7){
@@ -117,10 +119,12 @@ int main() {
 	  }
 	  
 		/* Limpio el LCD*/
-    lcd_clear(lcd);
+    //lcd_clear(lcd);
 	/*Voy a la columna y fila que necesito y escribo el resultado*/  
-	lcd_go_to_xy(lcd, 6, 1);
-	lcd_puts(lcd, "Heart Rate: %f",heart_rate);
+	//lcd_go_to_xy(lcd, 6, 1);
+	char str[20];
+	printf("Heart Rate: %.2f\r\n", heart_rate);
+	//lcd_puts(lcd, str);
 
 	sleep_ms(100);
   }

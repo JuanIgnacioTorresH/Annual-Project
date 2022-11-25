@@ -60,14 +60,12 @@ int main() {
   adc_init ();
   adc_gpio_init (28);
   gpio_select_input (0);
+	
+	/*Inicio un gpio de para el LED de emergencia*/
+	gpio_init (7);
+	gpio_set_dir (7,true);
 
-  /*Alimentación del buzzer y del servo */
-  gpio_init (7);
-  gpio_set_dir(7, true);
-  /*salida al control del servo*/
-  gpio_init (8);
-  gpio_set_dir(8, true);
-  
+	/*Declaro variables, la mayoría son contadores*/
   float high_peak = 0;
   float low_peak = 0;
   float absolute_time_to = 0;
@@ -80,25 +78,21 @@ int main() {
 	lcd_init(lcd);
 
   while (true) {
+	  /*Asigna una variable para los datos del adc*/
 		uint16_t voltage_value = adc_read();
 
-    /*        PWM y Alimentación          */
-    if (no_pulse >= 10){
-      gpio_put (7, true);
-      while (no_pulse >= 10 ){
-        gpio_put (8,true);
-        sleep_ms (20);
-        gpio_put (8,false);
-      }
-      gpio_put (7, false);
-    }
 
-
-		/* Limpio el LCD. Por defecto, va al 0;0 */
+		/* Limpio el LCD*/
     lcd_clear(lcd);
     
     /*       Algoritmo para los datos de entrada      */
-
+    /* Los valores que da el adc varían entre aproximadamente 1000 y 0, siendo 1000 los valores cuando el pulso tiene un pico y 0 cuando está 
+    en su estado más bajo. Si se encuentra un pico (en este caso redondeado a cualquier caso mayor de 950, obtendré el tiempo en ese momento y aumentaré
+    en 1 el contador que hizo trigger la condición para que no se repita el mismo proceso ante valores similares a 950. Lo siguiente que va a detectar es cuando
+    el pulso este en lo más bajo, osea 0. Una vez detecta, permite a la siguiente fase proseguir y aumenta un contador no_pulse en caso que deje de haber pulso.
+    Una vez se detecta el segundo pico, como high_peak es 2, tomará un segundo valor de tiempo y lo restará con el primero. Este tiempo de referencia se pasa
+    de microsegundos a segundos y se restablecen los valores de las condiciones a 0*/
+	  
     if (voltage_value > 950) {
       if (high_peak = 0){
         absolute_time_from = get_absolute_time();
@@ -119,11 +113,13 @@ int main() {
         no_pulse = no_pulse + 1;
       }
     }
+	  /* El pulso cardíaco es igual a cuanto tiempo tard
     heart_rate = 60 / time;
+	/*Voy a la columna y fila que necesito y escribo el resultado*/  
+	lcd_go_to_xy(lcd, 6, 1);
+	lcd_puts(lcd, "Heart Rate: %f",heart_rate);
 
-		lcd_puts(lcd, "Heart Rate: %f",heart_rate);
-
-		sleep_ms(100);
+	sleep_ms(100);
   }
 }
 

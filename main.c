@@ -80,10 +80,6 @@ int main() {
   while (true) {
 	  /*Asigna una variable para los datos del adc*/
 		uint16_t voltage_value = adc_read();
-
-
-		/* Limpio el LCD*/
-    lcd_clear(lcd);
     
     /*       Algoritmo para los datos de entrada      */
     /* Los valores que da el adc varían entre aproximadamente 1000 y 0, siendo 1000 los valores cuando el pulso tiene un pico y 0 cuando está 
@@ -113,8 +109,15 @@ int main() {
         no_pulse = no_pulse + 1;
       }
     }
-	  /* El pulso cardíaco es igual a cuanto tiempo tard
     heart_rate = 60 / time;
+    
+	  /*LED de Emergencia*/
+	  if (no_pulse = 7){
+		  gpio_put (7, true);
+	  }
+	  
+		/* Limpio el LCD*/
+    lcd_clear(lcd);
 	/*Voy a la columna y fila que necesito y escribo el resultado*/  
 	lcd_go_to_xy(lcd, 6, 1);
 	lcd_puts(lcd, "Heart Rate: %f",heart_rate);
